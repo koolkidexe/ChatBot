@@ -2,7 +2,7 @@ import streamlit as st
 import google.generativeai as genai
 
 # === Page Config ===
-st.set_page_config(page_title="DeviBot - Chatbot", layout="centered")
+st.set_page_config(page_title="NandhaBot - Chatbot", layout="centered")
 
 # === Custom CSS for styling ===
 st.markdown("""
@@ -39,8 +39,8 @@ st.markdown("""
 """, unsafe_allow_html=True)
 
 # === Title ===
-st.markdown('<div class="title">DeviBot</div>', unsafe_allow_html=True)
-st.markdown("Ask anything — DeviBot: AI Virtual Assistant.")
+st.markdown('<div class="title">NandhaBot</div>', unsafe_allow_html=True)
+st.markdown("Ask anything — NandhaBot: AI Virtual Assistant.")
 
 # === Sidebar ===
 st.sidebar.header("Settings")
@@ -90,7 +90,7 @@ for msg in st.session_state.messages:
     )
 
 # === Chat Input ===
-user_input = st.chat_input("Say something to DeviBot...")
+user_input = st.chat_input("Say something to NandhaBot...")
 
 if user_input:
     st.session_state.messages.append({"role": "user", "content": user_input})
@@ -102,9 +102,9 @@ if user_input:
     # Build chat context
     chat_history = ""
     for msg in st.session_state.messages:
-        role = "User" if msg["role"] == "user" else "DeviBot"
+        role = "User" if msg["role"] == "user" else "NandhaBot"
         chat_history += f"{role}: {msg['content']}\n"
-    chat_history += "DeviBot:"
+    chat_history += "NandhaBot:"
 
     # Get Gemini response
     try:
@@ -112,14 +112,14 @@ if user_input:
         reply = response.text
         st.session_state.messages.append({"role": "assistant", "content": reply})
         st.markdown(
-            f'<div class="chat-message assistant"><strong>DeviBot</strong>: {reply}</div>',
+            f'<div class="chat-message assistant"><strong>NandhaBot</strong>: {reply}</div>',
             unsafe_allow_html=True
         )
     except Exception as e:
         error_msg = f"Error: {e}"
         st.session_state.messages.append({"role": "assistant", "content": error_msg})
         st.markdown(
-            f'<div class="chat-message assistant"><strong>DeviBot</strong>: {error_msg}</div>',
+            f'<div class="chat-message assistant"><strong>NandhaBot</strong>: {error_msg}</div>',
             unsafe_allow_html=True
         )
 
