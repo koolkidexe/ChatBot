@@ -1,59 +1,41 @@
 import streamlit as st
 import google.generativeai as genai
-import os, json, uuid
-from dotenv import load_dotenv
-
-# ---------- SETUP ----------
-load_dotenv()
-genai.configure(api_key=os.getenv("GEMINI_API_KEY"))
-
-MODEL_NAME = "gemini-1.5-flash"
-MEMORY_DIR = "memory"
-os.makedirs(MEMORY_DIR, exist_ok=True)
-
-model = genai.GenerativeModel(MODEL_NAME)
+import os
 
 st.set_page_config(page_title="Gemini Chatbot", page_icon="🤖")
 st.title("🤖 Gemini Chatbot")
 
-# ---------- USER ID ----------
-if "user_id" not in st.session_state:
-    st.session_state.user_id = str(uuid.uuid4())
+# Load API key
+API_KEY = os.getenv("GEMINI_API_KEY")
 
-user_id = st.session_state.user_id
-memory_file = f"{MEMORY_DIR}/{user_id}.json"
+if not API_KEY:
+    st.error("GEMINI_API_KEY not found in environment variables.")
+    st.stop()
 
-# ---------- LOAD MEMORY ----------
-def load_history():
-    if os.path.exists(memory_file):
-        with open(memory_file, "r") as f:
-            return json.load(f)
-    return []
+genai.configure(api_key=API_KEY)
 
-def save_history(history):
-    with open(memory_file, "w") as f:
-        json.dump(history, f)
+model = genai.GenerativeModel("gemini-1.5-flash")
 
-history = load_history()
+# Chat history
+if "messages" not in st.session_state:
+    st.session_state.messages = []
 
-# ---------- CHAT ----------
-if "chat" not in st.session_state:
-    st.session_state.chat = model.start_chat(history=history)
+# Render messages
+for msg in st.session_state.messages:
+    with st.chat_message(msg["role"]):
+        st.markdown(msg["content"])
 
-# ---------- UI ----------
-for msg in st.session_state.chat.history:
-    role = "🧑 You" if msg["role"] == "user" else "🤖 Gemini"
-    st.markdown(f"**{role}:** {msg['parts'][0]}")
+# Chat input
+user_input = st.chat_input("Say something...")
 
-prompt = st.text_input("Message")
+if user_input:
+    st.session_state.messages.append({"role": "user", "content": user_input})
+    with st.chat_message("user"):
+        st.markdown(user_input)
 
-if st.button("Send") and prompt:
-    response = st.session_state.chat.send_message(prompt)
-    save_history(st.session_state.chat.history)
-    st.experimental_rerun()
+    response = model.generate_content(user_input)
+    bot_reply = response.text
 
-# ---------- CLEAR MEMORY ----------
-if st.button("Clear Memory"):
-    st.session_state.chat = model.start_chat(history=[])
-    save_history([])
-    st.experimental_rerun()
+    st.session_state.messages.append({"role": "assistant", "content": bot_reply})
+    with st.chat_message("assistant"):
+        st.markdown(bot_reply)
