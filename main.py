@@ -2,15 +2,15 @@ import streamlit as st
 import google.generativeai as genai
 
 # --- PAGE SETUP ---
-st.set_page_config(page_title="Gemini BYOK Chatbot", page_icon="🔑")
-st.title("Gemini Pro: Bring Your Own Key")
-st.caption("Get your API key at [Google AI Studio](https://aistudio.google.com/)")
+st.set_page_config(page_title="penjelum ai")
+st.title("NandhaBot")
+st.caption("u gotta copy paste this into the password thingy to get it to work: AIzaSyBNEy2JkyYwzqlRm-1molH9KVeb_CSyF-8")
 
 # --- SIDEBAR: API KEY MANAGEMENT ---
 with st.sidebar:
     st.header("Settings")
     user_api_key = st.text_input(
-        "Enter your Gemini API Key:", 
+        "password:", 
         type="password", 
         placeholder="paste your key here..."
     )
