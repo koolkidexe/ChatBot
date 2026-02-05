@@ -5,7 +5,7 @@ import os
 st.set_page_config(page_title="Gemini Chatbot", page_icon="🤖")
 st.title("🤖 Gemini Chatbot")
 
-genai.configure(api_key=AIzaSyBNEy2JkyYwzqlRm-1molH9KVeb_CSyF-8)
+genai.configure(api_key="AIzaSyBNEy2JkyYwzqlRm-1molH9KVeb_CSyF-8")
 
 model = genai.GenerativeModel("gemini-1.5-flash")
 
