@@ -28,7 +28,7 @@ if not user_api_key:
 
 # Configure the API with the user's provided key
 genai.configure(api_key=user_api_key)
-model = genai.GenerativeModel("gemini-2.0-flash")
+model = genai.GenerativeModel("gemini-1.5-flash")
 
 # Initialize session state for messages
 if "messages" not in st.session_state:
