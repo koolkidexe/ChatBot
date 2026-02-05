@@ -1,33 +1,73 @@
 import streamlit as st
 import google.generativeai as genai
 
-# Your master key (Hidden from the user UI)
-MY_SECURE_KEY = "AIzaSyBNEy2JkyYwzqlRm-1molH9KVeb_CSyF-8"
+# --- PAGE SETUP ---
+st.set_page_config(page_title="Gemini BYOK Chatbot", page_icon="🔑")
+st.title("Gemini Pro: Bring Your Own Key")
+st.caption("Get your API key at [Google AI Studio](https://aistudio.google.com/)")
 
-# Configure the SDK once
-genai.configure(api_key=MY_SECURE_KEY)
+# --- SIDEBAR: API KEY MANAGEMENT ---
+with st.sidebar:
+    st.header("Settings")
+    user_api_key = st.text_input(
+        "Enter your Gemini API Key:", 
+        type="password", 
+        placeholder="paste your key here..."
+    )
+    
+    if st.button("Clear Chat History"):
+        st.session_state.messages = []
+        st.rerun()
 
-# Use a lighter model to save your quota (Gemini 2.0 Flash)
+# --- CHAT INITIALIZATION ---
+
+# Check if the user has provided a key
+if not user_api_key:
+    st.warning("Please enter your API Key in the sidebar to begin.")
+    st.stop()
+
+# Configure the API with the user's provided key
+genai.configure(api_key=user_api_key)
 model = genai.GenerativeModel("gemini-2.0-flash")
 
-# Every user gets their own unique 'chat_session' stored in their browser memory
-if "chat_session" not in st.session_state:
-    # Start a brand new history for this specific user
-    st.session_state.chat_session = model.start_chat(history=[])
+# Initialize session state for messages
+if "messages" not in st.session_state:
+    st.session_state.messages = []
 
-# Display existing messages from this specific user's session
-for message in st.session_state.chat_session.history:
-    role = "assistant" if message.role == "model" else "user"
-    with st.chat_message(role):
-        st.markdown(message.parts[0].text)
+# --- DISPLAY CHAT ---
 
-# Input for the user
-if prompt := st.chat_input("Ask something..."):
+# Show history
+for message in st.session_state.messages:
+    with st.chat_message(message["role"]):
+        st.markdown(message["content"])
+
+# Handle new user input
+if prompt := st.chat_input("What's up?"):
+    # Store and display user message
+    st.session_state.messages.append({"role": "user", "content": prompt})
     with st.chat_message("user"):
         st.markdown(prompt)
-    
-    # This sends the message only within THIS user's private session
-    response = st.session_state.chat_session.send_message(prompt)
-    
+
+    # Generate response using the provided key
     with st.chat_message("assistant"):
-        st.markdown(response.text)
+        message_placeholder = st.empty()
+        full_response = ""
+        
+        try:
+            # We use stream=True for that modern "typing" feel
+            response = model.generate_content(prompt, stream=True)
+            
+            for chunk in response:
+                if chunk.text:
+                    full_response += chunk.text
+                    message_placeholder.markdown(full_response + "▌")
+            
+            message_placeholder.markdown(full_response)
+            # Save the final response
+            st.session_state.messages.append({"role": "assistant", "content": full_response})
+            
+        except Exception as e:
+            # Handle invalid keys or API errors gracefully
+            st.error(f"Error: {e}")
+            if "API_KEY_INVALID" in str(e):
+                st.info("Your API key seems incorrect. Please check it in the sidebar.")
