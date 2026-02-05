@@ -5,14 +5,7 @@ import os
 st.set_page_config(page_title="Gemini Chatbot", page_icon="🤖")
 st.title("🤖 Gemini Chatbot")
 
-# Load API key
-API_KEY = os.getenv("GEMINI_API_KEY")
-
-if not API_KEY:
-    st.error("GEMINI_API_KEY not found in environment variables.")
-    st.stop()
-
-genai.configure(api_key=API_KEY)
+genai.configure(api_key=AIzaSyBNEy2JkyYwzqlRm-1molH9KVeb_CSyF-8)
 
 model = genai.GenerativeModel("gemini-1.5-flash")
 
