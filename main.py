@@ -2,9 +2,10 @@ import streamlit as st
 import google.generativeai as genai
 
 # --- PAGE SETUP ---
-st.set_page_config(page_title="penjelum ai")
-st.title("NandhaBot")
-st.caption("u gotta copy paste this into the password thingy to get it to work: AIzaSyBBQh6vsTvZTS2ptHN28EjVVxsOS_Vcf1Y")
+st.set_page_config(page_title="NandhaBot AI", page_icon="🤖")
+st.title("🤖 NandhaBot")
+st.caption("u gotta copy paste this into the password thingy to get it to work: **AIzaSyBBQh6vsTvZTS2ptHN28EjVVxsOS_Vcf1Y**")
+st.info("Created by **Nandha**")
 
 # --- SIDEBAR: API KEY MANAGEMENT ---
 with st.sidebar:
@@ -21,14 +22,21 @@ with st.sidebar:
 
 # --- CHAT INITIALIZATION ---
 
-# Check if the user has provided a key
 if not user_api_key:
-    st.warning("Please enter your API Key in the sidebar to begin.")
+    st.warning("Please enter the password in the sidebar to begin.")
     st.stop()
 
-# Configure the API with the user's provided key
+# Configure the API
 genai.configure(api_key=user_api_key)
-model = genai.GenerativeModel("gemini-2.5-flash")
+
+# ADDING SYSTEM INSTRUCTIONS HERE
+system_message = "You are NandhaBot, a helpful AI assistant. You were created by Nandha. If anyone asks who made you or what your name is, always respond that you are NandhaBot and Nandha is your creator."
+
+# Initialize model with the system instruction
+model = genai.GenerativeModel(
+    model_name="gemini-2.5-flash",
+    system_instruction=system_message
+)
 
 # Initialize session state for messages
 if "messages" not in st.session_state:
@@ -36,26 +44,28 @@ if "messages" not in st.session_state:
 
 # --- DISPLAY CHAT ---
 
-# Show history
 for message in st.session_state.messages:
     with st.chat_message(message["role"]):
         st.markdown(message["content"])
 
 # Handle new user input
-if prompt := st.chat_input("What's up?"):
-    # Store and display user message
+if prompt := st.chat_input("Ask NandhaBot anything..."):
     st.session_state.messages.append({"role": "user", "content": prompt})
     with st.chat_message("user"):
         st.markdown(prompt)
 
-    # Generate response using the provided key
     with st.chat_message("assistant"):
         message_placeholder = st.empty()
         full_response = ""
         
         try:
-            # We use stream=True for that modern "typing" feel
-            response = model.generate_content(prompt, stream=True)
+            # We use the 'chat' method to ensure history is tracked properly
+            chat = model.start_chat(history=[
+                {"role": m["role"] if m["role"] == "user" else "model", "parts": [m["content"]]} 
+                for m in st.session_state.messages[:-1]
+            ])
+            
+            response = chat.send_message(prompt, stream=True)
             
             for chunk in response:
                 if chunk.text:
@@ -63,11 +73,7 @@ if prompt := st.chat_input("What's up?"):
                     message_placeholder.markdown(full_response + "▌")
             
             message_placeholder.markdown(full_response)
-            # Save the final response
             st.session_state.messages.append({"role": "assistant", "content": full_response})
             
         except Exception as e:
-            # Handle invalid keys or API errors gracefully
             st.error(f"Error: {e}")
-            if "API_KEY_INVALID" in str(e):
-                st.info("Your API key seems incorrect. Please check it in the sidebar.")
