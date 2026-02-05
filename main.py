@@ -4,7 +4,7 @@ import google.generativeai as genai
 # --- PAGE SETUP ---
 st.set_page_config(page_title="penjelum ai")
 st.title("NandhaBot")
-st.caption("u gotta copy paste this into the password thingy to get it to work: AIzaSyBNEy2JkyYwzqlRm-1molH9KVeb_CSyF-8")
+st.caption("u gotta copy paste this into the password thingy to get it to work: AIzaSyBBQh6vsTvZTS2ptHN28EjVVxsOS_Vcf1Y")
 
 # --- SIDEBAR: API KEY MANAGEMENT ---
 with st.sidebar:
