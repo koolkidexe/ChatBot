@@ -3,7 +3,7 @@ import google.generativeai as genai
 
 GEMINI_API_KEY = "AIzaSyBNEy2JkyYwzqlRm-1molH9KVeb_CSyF-8"
 
-st.set_page_config(page_title="penjelum ai", page_icon="🧠")
+st.set_page_config(page_title="penjelum ai", page_icon="")
 st.title("NandhaBot(tuff)")
 
 # Setup the API
