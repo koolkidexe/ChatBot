@@ -7,7 +7,7 @@ st.title("🤖 Gemini Chatbot")
 
 genai.configure(api_key="AIzaSyBNEy2JkyYwzqlRm-1molH9KVeb_CSyF-8")
 
-model = genai.GenerativeModel("gemini-3-pro")
+model = genai.GenerativeModel("	gemini-3-flash")
 
 # Chat history
 if "messages" not in st.session_state:
