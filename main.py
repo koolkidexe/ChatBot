@@ -2,8 +2,8 @@ import streamlit as st
 import google.generativeai as genai
 import os
 
-st.set_page_config(page_title="Gemini Chatbot", page_icon="🤖")
-st.title("🤖 Gemini Chatbot")
+st.set_page_config(page_title="Nandhabot(tuff)")
+st.title("Nandhabot")
 
 genai.configure(api_key="AIzaSyBNEy2JkyYwzqlRm-1molH9KVeb_CSyF-8")
 
