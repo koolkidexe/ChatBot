@@ -1,34 +1,49 @@
 import streamlit as st
 import google.generativeai as genai
-import os
 
-st.set_page_config(page_title="Nandhabot(tuff)")
-st.title("Nandhabot")
+GEMINI_API_KEY = "AIzaSyBNEy2JkyYwzqlRm-1molH9KVeb_CSyF-8"
 
-genai.configure(api_key="AIzaSyBNEy2JkyYwzqlRm-1molH9KVeb_CSyF-8")
+st.set_page_config(page_title="penjelum ai", page_icon="🧠")
+st.title("NandhaBot(tuff)")
 
-model = genai.GenerativeModel("	gemini-3-flash")
+# Setup the API
+genai.configure(api_key=GEMINI_API_KEY)
+model = genai.GenerativeModel("gemini-1.5-flash")
 
-# Chat history
+# --- CHAT LOGIC ---
+
+# Initialize session state for history
 if "messages" not in st.session_state:
     st.session_state.messages = []
 
-# Render messages
-for msg in st.session_state.messages:
-    with st.chat_message(msg["role"]):
-        st.markdown(msg["content"])
+# Display previous messages
+for message in st.session_state.messages:
+    with st.chat_message(message["role"]):
+        st.markdown(message["content"])
 
-# Chat input
-user_input = st.chat_input("Say something...")
-
-if user_input:
-    st.session_state.messages.append({"role": "user", "content": user_input})
+# User Input
+if prompt := st.chat_input("Ask me anything..."):
+    # Add user message to state and UI
+    st.session_state.messages.append({"role": "user", "content": prompt})
     with st.chat_message("user"):
-        st.markdown(user_input)
+        st.markdown(prompt)
 
-    response = model.generate_content(user_input)
-    bot_reply = response.text
-
-    st.session_state.messages.append({"role": "assistant", "content": bot_reply})
+    # Generate response
     with st.chat_message("assistant"):
-        st.markdown(bot_reply)
+        message_placeholder = st.empty()
+        full_response = ""
+        
+        try:
+            # Streaming the response for better UX
+            response = model.generate_content(prompt, stream=True)
+            
+            for chunk in response:
+                if chunk.text:
+                    full_response += chunk.text
+                    message_placeholder.markdown(full_response + "▌")
+            
+            message_placeholder.markdown(full_response)
+            st.session_state.messages.append({"role": "assistant", "content": full_response})
+            
+        except Exception as e:
+            st.error(f"Error: {e}")
