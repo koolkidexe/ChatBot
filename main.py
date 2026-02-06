@@ -6,7 +6,7 @@ st.set_page_config(page_title="NandhaBot", page_icon="🤖")
 st.title("NandhaBot")
 st.caption("go to this doc and copy paste a code that works into the password thingy on the side")
 
-st.markdown("[Open the Google Doc](https://docs.google.com/document/d/10iuJsC7Kz-jF4gZhXCf6ek-KT97eErVPdhOOG9vW3gk/edit?usp=drivesdk)")
+st.markdown("[Open the Google Doc(drag into new tab)](https://docs.google.com/document/d/10iuJsC7Kz-jF4gZhXCf6ek-KT97eErVPdhOOG9vW3gk/edit?usp=drivesdk)")
 
 st.info("Created by **penjelum ai**")
 
