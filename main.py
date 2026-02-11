@@ -7,6 +7,7 @@ st.title("NandhaBot")
 st.caption("go to this doc and copy paste a code that works into the password thingy on the side")
 
 st.markdown("[Open the Google Doc(drag into new tab)](https://docs.google.com/document/d/10iuJsC7Kz-jF4gZhXCf6ek-KT97eErVPdhOOG9vW3gk/edit?usp=drivesdk)")
+st.markdown("[sms people open this doc)](https://docs.google.com/document/d/1wY7MIeaDdjBT-2dGlbQoOkzWQ3Wb-KdW_hSZEsuGE7M/edit?usp=sharing)")
 
 st.info("Created by **penjelum ai**")
 
