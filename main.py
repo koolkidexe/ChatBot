@@ -13,7 +13,7 @@ st.info("Created by **penjelum ai**")
 
 import streamlit as st
 
-st.link_button("Open NandhaBot", "https://sites.google.com/view/nandhabotv2")
+st.link_button("Open Latest NandhaBot Link", "https://sites.google.com/view/nandhabotv2")
 
 # --- SIDEBAR: API KEY MANAGEMENT ---
 with st.sidebar:
