@@ -11,6 +11,10 @@ st.markdown("[sms people open this doc)](https://docs.google.com/document/d/1wY7
 
 st.info("Created by **penjelum ai**")
 
+import streamlit as st
+
+st.link_button("Open NandhaBot", "https://sites.google.com/view/nandhabotv2")
+
 # --- SIDEBAR: API KEY MANAGEMENT ---
 with st.sidebar:
     st.header("Settings")
